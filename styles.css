@@ -631,6 +631,7 @@ body {
     color: white;
     margin-top: 0;
     width: auto;
+    flex: 1;
 }
 
 .btn-primary:hover {
@@ -646,6 +647,73 @@ body {
 
 .btn-secondary:hover {
     background: rgba(255, 255, 255, 0.3);
+}
+
+.btn-record {
+    background: rgba(227, 24, 55, 0.8);
+    color: white;
+    border: 1px solid #E31837;
+}
+
+.btn-record:hover {
+    background: #E31837;
+    transform: scale(1.05);
+}
+
+.btn-record.recording {
+    background: #E31837;
+    animation: blink 1s ease-in-out infinite;
+}
+
+@keyframes blink {
+    0%, 100% {
+        background: #E31837;
+    }
+    50% {
+        background: #ff5a6b;
+    }
+}
+
+.btn-download {
+    background: rgba(46, 125, 50, 0.8);
+    color: white;
+    border: 1px solid #2e7d32;
+}
+
+.btn-download:hover {
+    background: #2e7d32;
+    transform: scale(1.05);
+}
+
+.recording-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(227, 24, 55, 0.2);
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 13px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background: #E31837;
+    border-radius: 50%;
+    animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(1.2);
+    }
 }
 
 .scene-info {
@@ -671,5 +739,13 @@ body {
     .controls {
         width: 100%;
         max-width: none;
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
     }
 }
