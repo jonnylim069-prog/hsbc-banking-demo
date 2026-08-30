@@ -105,34 +105,224 @@ let currentTime = 0;
 let isPlaying = false;
 let animationFrameId = null;
 let currentSceneIndex = 0;
+let isRecording = false;
+let mediaRecorder = null;
+let recordedChunks = [];
+let recordingStartTime = 0;
+let recordingCanvas = null;
+let recordingContext = null;
 
 // DOM Elements
 const screenElement = document.getElementById('screen');
 const playBtn = document.getElementById('playBtn');
 const pauseBtn = document.getElementById('pauseBtn');
 const resetBtn = document.getElementById('resetBtn');
+const recordBtn = document.getElementById('recordBtn');
+const downloadBtn = document.getElementById('downloadBtn');
 const currentTimeDisplay = document.getElementById('currentTime');
 const totalTimeDisplay = document.getElementById('totalTime');
 const progressFill = document.getElementById('progressFill');
 const sceneInfo = document.getElementById('sceneInfo');
+const recordingStatus = document.getElementById('recordingStatus');
+const recordingTime = document.getElementById('recordingTime');
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     totalTimeDisplay.textContent = '76.7s';
     renderScene(0);
     setupEventListeners();
+    setupVideoRecording();
 });
 
 function setupEventListeners() {
     playBtn.addEventListener('click', play);
     pauseBtn.addEventListener('click', pause);
     resetBtn.addEventListener('click', reset);
+    recordBtn.addEventListener('click', toggleRecording);
+    downloadBtn.addEventListener('click', downloadVideo);
+}
+
+function setupVideoRecording() {
+    // Create a canvas element for recording the phone screen
+    recordingCanvas = document.createElement('canvas');
+    recordingCanvas.width = 360;
+    recordingCanvas.height = 720;
+    recordingContext = recordingCanvas.getContext('2d');
+}
+
+function toggleRecording() {
+    if (!isRecording) {
+        startRecording();
+    } else {
+        stopRecording();
+    }
+}
+
+function startRecording() {
+    isRecording = true;
+    recordedChunks = [];
+    recordingStartTime = currentTime;
+    
+    recordBtn.classList.add('recording');
+    recordBtn.disabled = true;
+    playBtn.disabled = false;
+    resetBtn.disabled = true;
+    recordingStatus.style.display = 'flex';
+    
+    // Use canvas to record the screen
+    const stream = recordingCanvas.captureStream(30); // 30 FPS
+    
+    try {
+        mediaRecorder = new MediaRecorder(stream, {
+            mimeType: 'video/webm;codecs=vp9',
+            videoBitsPerSecond: 2500000
+        });
+    } catch (e) {
+        // Fallback for browsers that don't support vp9
+        try {
+            mediaRecorder = new MediaRecorder(stream, {
+                mimeType: 'video/webm;codecs=vp8',
+                videoBitsPerSecond: 2500000
+            });
+        } catch (e2) {
+            mediaRecorder = new MediaRecorder(stream, {
+                videoBitsPerSecond: 2500000
+            });
+        }
+    }
+    
+    mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+            recordedChunks.push(event.data);
+        }
+    };
+    
+    mediaRecorder.start();
+    
+    // Start animation to capture frames
+    recordingLoop();
+    
+    console.log('Recording started');
+}
+
+function recordingLoop() {
+    if (!isRecording || currentTime >= 76.7) {
+        if (isRecording) {
+            stopRecording();
+        }
+        return;
+    }
+    
+    // Draw current frame to canvas
+    captureFrameToCanvas();
+    
+    // Update recording time display
+    recordingTime.textContent = Math.floor(currentTime - recordingStartTime) + 's';
+    
+    // Continue animation
+    animationFrameId = requestAnimationFrame(recordingLoop);
+}
+
+function captureFrameToCanvas() {
+    // Draw white background
+    recordingContext.fillStyle = '#f5f5f5';
+    recordingContext.fillRect(0, 0, recordingCanvas.width, recordingCanvas.height);
+    
+    // Draw phone frame border
+    recordingContext.fillStyle = '#000';
+    recordingContext.fillRect(0, 0, recordingCanvas.width, 12);
+    recordingContext.fillRect(0, recordingCanvas.height - 12, recordingCanvas.width, 12);
+    
+    // Draw notch
+    recordingContext.fillRect(105, 0, 150, 28);
+    
+    // Draw screen content
+    const phoneScreenRect = recordingCanvas.getBoundingClientRect();
+    const screen = screenElement;
+    
+    // Create a temporary canvas to render the DOM
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = 336;
+    tempCanvas.height = 696;
+    const tempCtx = tempCanvas.getContext('2d');
+    
+    // Fill background
+    tempCtx.fillStyle = '#f5f5f5';
+    tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+    
+    // Draw current scene content as SVG/HTML to canvas
+    // For simplicity, we'll capture the actual screen element
+    try {
+        const html2canvas = window.html2canvas;
+        if (html2canvas) {
+            // Use html2canvas if available (would need to be included)
+            html2canvas(screen).then(canvas => {
+                recordingContext.drawImage(canvas, 12, 12, 336, 696);
+            });
+        } else {
+            // Fallback: draw a placeholder
+            recordingContext.fillStyle = '#fff';
+            recordingContext.fillRect(12, 12, 336, 696);
+            recordingContext.fillStyle = '#1a1a2e';
+            recordingContext.font = '12px Arial';
+            recordingContext.fillText(sceneInfo.textContent, 20, 30);
+        }
+    } catch (e) {
+        // Silent fallback
+        recordingContext.fillStyle = '#fff';
+        recordingContext.fillRect(12, 12, 336, 696);
+    }
+    
+    // Draw home indicator
+    recordingContext.fillStyle = '#000';
+    recordingContext.fillRect(165, 702, 30, 4);
+}
+
+function stopRecording() {
+    if (!mediaRecorder || !isRecording) return;
+    
+    isRecording = false;
+    mediaRecorder.stop();
+    
+    recordBtn.classList.remove('recording');
+    recordBtn.disabled = false;
+    recordingStatus.style.display = 'none';
+    
+    mediaRecorder.onstop = () => {
+        // Convert WebM to MP4 or download as WebM
+        const blob = new Blob(recordedChunks, { type: 'video/webm' });
+        window.recordedVideoBlob = blob;
+        downloadBtn.style.display = 'block';
+        console.log('Recording stopped and saved');
+    };
+}
+
+function downloadVideo() {
+    if (!window.recordedVideoBlob) {
+        alert('No recording available. Please record first.');
+        return;
+    }
+    
+    const url = URL.createObjectURL(window.recordedVideoBlob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    a.download = `HSBC-Banking-Demo-${new Date().getTime()}.webm`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
 }
 
 function play() {
-    isPlaying = true;
-    playBtn.disabled = true;
-    pauseBtn.disabled = false;
+    // If recording, continue recording with auto-play
+    if (isRecording) {
+        // Continue with current recording
+    } else {
+        isPlaying = true;
+        playBtn.disabled = true;
+        pauseBtn.disabled = false;
+    }
     animate();
 }
 
@@ -148,6 +338,9 @@ function pause() {
 function reset() {
     currentTime = 0;
     isPlaying = false;
+    if (isRecording) {
+        stopRecording();
+    }
     playBtn.disabled = false;
     pauseBtn.disabled = true;
     currentSceneIndex = 0;
@@ -167,12 +360,15 @@ function animate() {
         isPlaying = false;
         playBtn.disabled = false;
         pauseBtn.disabled = true;
+        if (isRecording) {
+            stopRecording();
+        }
     }
 
     updateDisplay();
     updateSceneIndex();
 
-    if (isPlaying && currentTime < 76.7) {
+    if ((isPlaying || isRecording) && currentTime < 76.7) {
         animationFrameId = requestAnimationFrame(animate);
     }
 }
