@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSBC Mobile Banking - International Payment Flow</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Mobile Phone Frame -->
+        <div class="phone-frame">
+            <div class="phone-notch"></div>
+            <div class="phone-screen" id="screen">
+                <!-- Scenes will be rendered here -->
+            </div>
+            <div class="phone-home"></div>
+        </div>
+
+        <!-- Controls Panel -->
+        <div class="controls">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="time-display">
+                <span id="currentTime">0.0s</span> / <span id="totalTime">76.7s</span>
+            </div>
+            <div class="buttons">
+                <button id="playBtn" class="btn btn-primary">▶ Play</button>
+                <button id="pauseBtn" class="btn btn-secondary">⏸ Pause</button>
+                <button id="resetBtn" class="btn btn-secondary">↻ Reset</button>
+            </div>
+            <div class="scene-info">
+                <p id="sceneInfo">Scene 1: Overview / Home</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
