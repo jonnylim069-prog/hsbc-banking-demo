@@ -11,7 +11,21 @@ A fully interactive prototype of HSBC Corporate Banking's international payment 
 ✅ **Processing Status** - Real-time progress indicators during payment processing
 ✅ **Success Animation** - Scale-in checkmark and detailed receipt confirmation
 ✅ **Playback Controls** - Play, pause, and reset functionality with time tracking
+✅ **Built-in Recording** - Record and download video directly from browser
 ✅ **Clean Fintech Design** - HSBC brand colors (red #E31837), modern UI patterns
+
+---
+
+## 🚀 **DOWNLOAD & PLAY NOW**
+
+### **[▶️ OPEN INTERACTIVE DEMO](https://jonnylim069-prog.github.io/hsbc-banking-demo/)**
+
+**Direct Links:**
+- 🌐 **Live Demo**: [https://jonnylim069-prog.github.io/hsbc-banking-demo/](https://jonnylim069-prog.github.io/hsbc-banking-demo/)
+- 💾 **Clone Repository**: `git clone https://github.com/jonnylim069-prog/hsbc-banking-demo.git`
+- 📥 **Download ZIP**: [Download Repository](https://github.com/jonnylim069-prog/hsbc-banking-demo/archive/refs/heads/main.zip)
+
+---
 
 ## 📱 Scenes Included
 
@@ -30,10 +44,14 @@ A fully interactive prototype of HSBC Corporate Banking's international payment 
 13. **Transaction History** (66.1s - 68.2s) - Latest transaction details
 14. **Receipt** (68.2s - 76.7s) - Full payment receipt with sender/beneficiary info
 
-## 🚀 Quick Start
+---
 
-### Option 1: View Online
-Open `index.html` directly in your browser:
+## 🎮 Quick Start Guide
+
+### **Option 1: Play Online (Recommended)**
+No installation needed - just click the link above!
+
+### **Option 2: Run Locally**
 ```bash
 # Clone the repository
 git clone https://github.com/jonnylim069-prog/hsbc-banking-demo.git
@@ -46,31 +64,71 @@ firefox index.html
 # or drag index.html into your browser
 ```
 
-### Option 2: Live Server
-If you have Node.js installed:
+### **Option 3: Use Local Server**
 ```bash
+# Using Node.js
 npx http-server
-# Navigate to http://localhost:8080
+# Visit http://localhost:8080
+
+# Or using Python
+python3 -m http.server 8000
+# Visit http://localhost:8000
 ```
 
-Or use Python:
-```bash
-python3 -m http.server 8000
-# Navigate to http://localhost:8000
-```
+---
 
 ## 🎮 How to Use
 
 1. **Play** - Click the ▶ Play button to start the 76.7-second demonstration
 2. **Pause** - Click ⏸ Pause to freeze at any point
 3. **Reset** - Click ↻ Reset to return to the beginning
-4. **Progress Bar** - Visual indicator of current playback position
-5. **Time Display** - Real-time counter showing current time / total duration
-6. **Scene Info** - Text showing which scene is currently active
+4. **Record Video** - Click ● Record Video to capture the demo
+5. **Download** - Click ⬇ Download MP4 to save the video
+6. **Progress Bar** - Visual indicator of current playback position
+7. **Time Display** - Real-time counter showing current time / total duration
+8. **Scene Info** - Text showing which scene is currently active
+
+---
+
+## 🎬 Recording Video
+
+### **Built-in Recording Feature**
+
+Capture the demo as a video file without any external tools:
+
+1. Click **● Record Video** button (red, blinking indicator)
+2. Click **▶ Play** to start the demo
+3. Watch the full 76.7-second animation
+4. Recording automatically stops at the end
+5. Click **⬇ Download MP4** to save
+6. Video saves as `HSBC-Banking-Demo-[timestamp].webm`
+
+**Video Specifications:**
+- Format: WebM (VP9/VP8 codec)
+- Resolution: 360 × 720 pixels (mobile portrait)
+- Frame Rate: 30 FPS
+- Bitrate: 2.5 Mbps (high quality)
+- File Size: ~25-35 MB
+
+### **Convert to MP4 (Optional)**
+
+If you need MP4 format:
+
+**Using FFmpeg:**
+```bash
+ffmpeg -i HSBC-Banking-Demo-[timestamp].webm -c:v libx264 -c:a aac output.mp4
+```
+
+**Online Converters:**
+- [CloudConvert](https://cloudconvert.com/)
+- [Convertio](https://convertio.co/webm-mp4/)
+- [VidSoft](https://www.vidsoft.org/)
+
+---
 
 ## 🎨 Design Details
 
-### Color Scheme
+### **Color Scheme**
 - **Primary Red**: #E31837 (HSBC brand)
 - **Text Dark**: #1a1a2e
 - **Background Light**: #f5f5f5, #f9f9f9
@@ -78,18 +136,20 @@ python3 -m http.server 8000
 - **Success Green**: #2e7d32
 - **Warning Orange**: #f57c00
 
-### Typography
+### **Typography**
 - **Font Family**: System sans-serif (San Francisco, Segoe UI, etc.)
 - **Balance Display**: 32px, bold, #E31837
 - **Labels**: 12px, uppercase, letterspaced
 - **Form Inputs**: 15px, readable contrast
 
-### Animations
+### **Animations**
 - **Keyboard Typing**: Progressive character reveal
 - **Biometric Pulse**: Continuous 1.5s pulse animation
 - **Status Indicators**: Active/completed state animations
 - **Success Checkmark**: Scale-in animation (0.5s)
 - **Button Hover**: Smooth background and scale transitions
+
+---
 
 ## 📁 File Structure
 
@@ -107,10 +167,11 @@ hsbc-banking-demo/
 - **CSS3** - Flexbox layout, animations, gradients
 - **Vanilla JavaScript** - No dependencies, pure ES6+
 - **RequestAnimationFrame** - Smooth 60 FPS playback
+- **MediaRecorder API** - Built-in video recording
 
 ## 🎬 Customization
 
-### Change the HSBC Brand Color
+### **Change the HSBC Brand Color**
 In `styles.css`, search for `#E31837` and replace with your color:
 ```css
 .header-logo { color: #YOUR_COLOR; }
@@ -119,13 +180,13 @@ In `styles.css`, search for `#E31837` and replace with your color:
 /* ... etc */
 ```
 
-### Adjust Animation Speed
+### **Adjust Animation Speed**
 In `app.js`, modify the `deltaTime` value:
 ```javascript
 const deltaTime = 1 / 60; // Change 60 to speed up/slow down
 ```
 
-### Add More Scenes
+### **Add More Scenes**
 1. Create a new renderer function in `app.js`:
 ```javascript
 function renderCustomScene(timeInScene, sceneDuration) {
@@ -134,6 +195,8 @@ function renderCustomScene(timeInScene, sceneDuration) {
 ```
 2. Add to the `scenes` array with timing
 3. Update `totalTime` display
+
+---
 
 ## 📊 Demo Account Details
 
@@ -148,6 +211,8 @@ function renderCustomScene(timeInScene, sceneDuration) {
 - **Type**: IBAN TO IBAN
 - **Reference**: HSBC899783627739
 - **Status**: Completed
+
+---
 
 ## 🌐 Browser Compatibility
 
@@ -169,6 +234,7 @@ The prototype is optimized for:
 - Lightweight CSS animations
 - Efficient DOM updates via innerHTML
 - ~50KB total (unminified)
+- 60 FPS smooth playback
 
 ## 💡 Use Cases
 
@@ -177,6 +243,17 @@ The prototype is optimized for:
 - 🎯 User testing & feedback gathering
 - 🎨 Design portfolio showcase
 - 💼 Investor presentations
+- 📹 Marketing and promotional videos
+
+---
+
+## 🔗 Direct Download Links
+
+- **Live Demo**: [Open in Browser](https://jonnylim069-prog.github.io/hsbc-banking-demo/)
+- **GitHub Repository**: [View Source Code](https://github.com/jonnylim069-prog/hsbc-banking-demo)
+- **Download as ZIP**: [Download Repository](https://github.com/jonnylim069-prog/hsbc-banking-demo/archive/refs/heads/main.zip)
+
+---
 
 ## 📝 License
 
@@ -199,4 +276,13 @@ For issues or suggestions, create a GitHub issue in this repository.
 **Created**: August 30, 2026
 **Duration**: 76.7 seconds of interactive storytelling
 **Scenes**: 14 fully animated screens
-**Technologies**: HTML5 + CSS3 + Vanilla JavaScript
+**Technologies**: HTML5 + CSS3 + Vanilla JavaScript + MediaRecorder API
+**Status**: ✅ Complete & Ready to Use
+
+---
+
+## 🎉 Start Using Now!
+
+### **[👉 CLICK HERE TO PLAY THE INTERACTIVE DEMO 👈](https://jonnylim069-prog.github.io/hsbc-banking-demo/)**
+
+**No installation. No dependencies. Just click and enjoy!** 🚀
